@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/schema/library.json",
+  "name": "MqttHandler",
+  "version": "1.0.0",
+  "description": "MQTT wrapper library that adds MQTT variables for a very easy and clean use of the PubSubClient library",
+  "keywords": "MQTT, MqttHandler, PubSub, PubSubClient, ESP, ESP32, ESP8266",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/hello-world.git"
+  },
+  "authors": [
+    {
+      "name": "Robin Trabert",
+      "maintainer": true
+    }
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "knolleary/PubSubClient": "~2.8"
+  },
+  "frameworks": [
+    "arduino"
+  ],
+  "platforms": [
+    "espressif8266",
+    "espressif32"
+  ]
+}
