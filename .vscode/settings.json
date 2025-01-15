@@ -1,8 +1,0 @@
-{
-    "cSpell.enabled": false,
-    "files.associations": {
-        "cmath": "cpp",
-        "type_traits": "cpp"
-    },
-    "cmake.ignoreCMakeListsMissing": true
-}
