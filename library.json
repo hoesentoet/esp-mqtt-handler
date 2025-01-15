@@ -6,7 +6,7 @@
   "keywords": "MQTT, MqttHandler, PubSub, PubSubClient, ESP, ESP32, ESP8266",
   "repository": {
     "type": "git",
-    "url": "https://github.com/username/hello-world.git"
+    "url": "https://github.com/hoesentoet/esp-mqtt-handler.git"
   },
   "authors": [
     {
