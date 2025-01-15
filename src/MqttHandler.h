@@ -148,7 +148,7 @@ class MqttHandler
         template <typename T>
         void _subscribe(const String &topic, std::function<void(T)> callback)
         {
-            String topicStr = String(MQTT_CLIENT_NAME) + String("/in/") + topic;
+            String topicStr = String(_mqttClientName) + String("/in/") + topic;
             _subscriptions[topicStr] = [callback, this](const String& value)
             {
                 T typedValue = this->_fromString<T>(value);
@@ -162,7 +162,7 @@ class MqttHandler
         {
             String valueStr = _toString(value);
 
-            String pubTopic = String(MQTT_CLIENT_NAME) + String("/out/") + topic;
+            String pubTopic = String(_mqttClientName) + String("/out/") + topic;
             if (_client.connected())
             {
                 _client.publish(pubTopic.c_str(), valueStr.c_str());
