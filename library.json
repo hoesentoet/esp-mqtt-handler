@@ -15,6 +15,7 @@
     }
   ],
   "license": "MIT",
+  "exclude": "platformio.ini",
   "dependencies": {
     "knolleary/PubSubClient": "~2.8"
   },
