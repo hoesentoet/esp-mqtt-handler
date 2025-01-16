@@ -3,9 +3,16 @@
 
 #include <Arduino.h>
 #include <PubSubClient.h>
-#include <WiFi.h>
 #include <functional>
 #include <unordered_map>
+
+#ifdef ESP32
+#include <WiFi.h>
+#elif defined(ESP8266)
+#include <ESP8266WiFi.h>
+#else
+#error "Unsupported platform"
+#endif
 
 struct StringHash {
     std::size_t operator()(const String& s) const {
