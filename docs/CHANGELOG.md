@@ -1,5 +1,10 @@
 # ChangeLog for MqttHandler
 
+## 1.0.3 - (2025-01-19)
+
+### Features
+- Add minimum publish interval option to MqttPubVariable. This offers the option to define that a PubVariable is only published every 5s for example.
+
 ## 1.0.2 - (2025-01-16)
 
 ### Bugfixes:

@@ -40,16 +40,6 @@ class MqttSubVariable
             return _value;
         }
 
-        void _setValueViaMqtt(T value)
-        {
-            _value = value;
-
-            if (_onChange)
-            {
-                _onChange(*this);
-            }
-        }
-
         String getTopic(void)
         {
             return _topic;
@@ -60,28 +50,49 @@ class MqttSubVariable
             _onChange = cb;
         }
 
+        friend class MqttHandler;
+
+
     private:
         T _value;
         String _topic;
         std::function<void(MqttSubVariable&)> _onChange;
+
+        void _setValue(T value)
+        {
+            _value = value;
+
+            if (_onChange)
+            {
+                _onChange(*this);
+            }
+        }
 };
 
 template <typename T>
 class MqttPubVariable
 {
     public:
-        MqttPubVariable(T value, String topic) : _value(value), _topic(topic)  {}
+        MqttPubVariable(T value, String topic, ulong minPubIntervalMs = 0)
+            : _value(value), _topic(topic), _minPubIntervalMs(minPubIntervalMs)  {}
 
         void setValue(T value)
         {
-            if (_value != value || !_initPub)
+            if (_value != value || !_initPubDone || _pubInQueue)
             {
                 _value = value;
-                if (_onChange)
+                if (_onChangeCb)
                 {
-                    _onChange(*this);
+                    if (_minPubIntervalMs == 0 || millis() - _lastPubTime > _minPubIntervalMs)
+                    {
+                        _onChangeCb(*this);
+                        _lastPubTime = millis();
+                        _pubInQueue = false;
+                    } else {
+                        _pubInQueue = true;
+                    }
                 }
-                _initPub = true;
+                _initPubDone = true;
             }
             else
             {
@@ -98,17 +109,22 @@ class MqttPubVariable
         {
             return _topic;
         }
-        
-        void _onChangeForMqtt(std::function<void(MqttPubVariable&)> cb)
-        {
-            _onChange = cb;
-        }
 
+        friend class MqttHandler;
+        
     private:
         T _value;
         String _topic;
-        std::function<void(MqttPubVariable&)> _onChange;
-        bool _initPub = false;
+        ulong _minPubIntervalMs;
+        std::function<void(MqttPubVariable&)> _onChangeCb;
+        bool _initPubDone = false;
+        bool _pubInQueue = false;
+        ulong _lastPubTime = 0;
+        
+        void _onChange(std::function<void(MqttPubVariable&)> cb)
+        {
+            _onChangeCb = cb;
+        }
 };
 
 class MqttHandler
@@ -126,7 +142,7 @@ class MqttHandler
         {
             const String topic = variable.getTopic();
             this->_subscribe<T>(topic, [&variable, this, topic](T newValue) {
-                variable._setValueViaMqtt(newValue);
+                variable._setValue(newValue);
                 Serial.println(String("Updated variable '") + variable.getTopic() + String("' to ") + String(variable.getValue()));
             });
         }
@@ -134,7 +150,7 @@ class MqttHandler
         template<typename T>
         void addPubVariable(MqttPubVariable<T> &variable)
         {
-            variable._onChangeForMqtt([this](MqttPubVariable<T>& var) {
+            variable._onChange([this](MqttPubVariable<T>& var) {
                 this->_publish(var.getTopic(), var.getValue());
             });
         }

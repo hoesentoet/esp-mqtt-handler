@@ -1,4 +1,3 @@
-
 #include "MqttHandler.h"
 
 WiFiClient __wifiClient;

@@ -7,7 +7,7 @@
 #define MQTT_TOPIC_SUBTEST_BOOL "subTestBool"
 #define MQTT_TOPIC_SUBTEST_float "subTestFloat"
 
-bool isWifiConnected;
+bool isWifiConnected = true;
 
 MqttHandler mqttHandler(IPAddress(192, 168, 0, 12), "user", "password", "testClient01");
 
