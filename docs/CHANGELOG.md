@@ -1,5 +1,10 @@
 # ChangeLog for MqttHandler
 
+## 1.0.4 - (2025-01-19)
+
+### Bugfixes:
+- Fix excluding test files from importing into projects
+
 ## 1.0.3 - (2025-01-19)
 
 ### Features
