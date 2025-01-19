@@ -1,2 +1,4 @@
 .pio
 .vscode
+main.cpp
+platformio.ini
