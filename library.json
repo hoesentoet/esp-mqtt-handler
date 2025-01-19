@@ -15,12 +15,7 @@
     }
   ],
   "license": "MIT",
-  "export": {
-    "exclude": [
-      "platformio.ini",
-      "src/main.cpp"
-    ]
-  },
+  "exclude": "src/main.cpp",
   "dependencies": {
     "knolleary/PubSubClient": "~2.8"
   },
