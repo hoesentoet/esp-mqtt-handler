@@ -1,5 +1,10 @@
 # ChangeLog for MqttHandler
 
+## 1.0.6 - (2025-01-20)
+
+### Bugfixes:
+- Remove strict topic from PubVariable and remove callback parameter from SubVariable constructor because of bugs.
+
 ## 1.0.5 - (2025-01-20)
 
 ### Features
