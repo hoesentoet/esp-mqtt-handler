@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/schema/library.json",
   "name": "MqttHandler",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "MQTT wrapper library that adds MQTT variables for a very easy and clean use of the PubSubClient library",
   "keywords": "MQTT, MqttHandler, PubSub, PubSubClient, ESP, ESP32, ESP8266",
   "repository": {
