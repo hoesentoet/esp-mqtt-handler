@@ -29,11 +29,11 @@ template <typename T>
 class MqttSubVariable
 {
     public:
-        MqttSubVariable(T value, String topic, std::function<void(MqttSubVariable&)> onChangeCb = nullptr)
-            : _value(value), _topic(topic), _onChange(onChangeCb) {}
+        MqttSubVariable(T value, String topic, bool strictTopic = false, std::function<void(MqttSubVariable&)> onChangeCb = nullptr)
+            : _value(value), _topic(topic), _strictTopic(strictTopic), _onChange(onChangeCb) {}
         
-        MqttSubVariable(T value, const char *topic, std::function<void(MqttSubVariable&)> onChangeCb = nullptr)
-            : _value(value), _topic(String(topic)), _onChange(onChangeCb) {}
+        MqttSubVariable(T value, const char *topic, bool strictTopic = false, std::function<void(MqttSubVariable&)> onChangeCb = nullptr)
+            : _value(value), _topic(String(topic)), _strictTopic(strictTopic), _onChange(onChangeCb) {}
 
         T getValue(void)
         {
@@ -43,6 +43,10 @@ class MqttSubVariable
         String getTopic(void)
         {
             return _topic;
+        }
+        bool isTopicStrict(void)
+        {
+            return _strictTopic;
         }
         
         void onChange(std::function<void(MqttSubVariable&)> cb)
@@ -56,6 +60,7 @@ class MqttSubVariable
     private:
         T _value;
         String _topic;
+        bool _strictTopic;
         std::function<void(MqttSubVariable&)> _onChange;
 
         void _setValue(T value)
@@ -73,8 +78,11 @@ template <typename T>
 class MqttPubVariable
 {
     public:
-        MqttPubVariable(T value, String topic, ulong minPubIntervalMs = 0)
-            : _value(value), _topic(topic), _minPubIntervalMs(minPubIntervalMs)  {}
+        MqttPubVariable(T value, String topic, bool strictTopic = false, ulong minPubIntervalMs = 0)
+            : _value(value), _topic(topic), _strictTopic(strictTopic), _minPubIntervalMs(minPubIntervalMs)  {}
+        
+        MqttPubVariable(T value, const char *topic, bool strictTopic = false, ulong minPubIntervalMs = 0)
+            : _value(value), _topic(String(topic)), _strictTopic(strictTopic), _minPubIntervalMs(minPubIntervalMs)  {}
 
         void setValue(T value)
         {
@@ -109,12 +117,17 @@ class MqttPubVariable
         {
             return _topic;
         }
+        bool isTopicStrict(void)
+        {
+            return _strictTopic;
+        }
 
         friend class MqttHandler;
         
     private:
         T _value;
         String _topic;
+        bool _strictTopic;
         ulong _minPubIntervalMs;
         std::function<void(MqttPubVariable&)> _onChangeCb;
         bool _initPubDone = false;
@@ -141,7 +154,8 @@ class MqttHandler
         void addSubVariable(MqttSubVariable<T> &variable)
         {
             const String topic = variable.getTopic();
-            this->_subscribe<T>(topic, [&variable, this, topic](T newValue) {
+            bool strictTopic = variable.isTopicStrict();
+            this->_subscribe<T>(topic, strictTopic, [&variable, this, topic](T newValue) {
                 variable._setValue(newValue);
                 Serial.println(String("Updated variable '") + variable.getTopic() + String("' to ") + String(variable.getValue()));
             });
@@ -151,7 +165,7 @@ class MqttHandler
         void addPubVariable(MqttPubVariable<T> &variable)
         {
             variable._onChange([this](MqttPubVariable<T>& var) {
-                this->_publish(var.getTopic(), var.getValue());
+                this->_publish(var.getTopic(), var.isTopicStrict(), var.getValue());
             });
         }
 
@@ -169,9 +183,9 @@ class MqttHandler
         std::unordered_map<String, String, StringHash> _toPublish;
 
         template <typename T>
-        void _subscribe(const String &topic, std::function<void(T)> callback)
+        void _subscribe(const String &topic, bool strictTopic, std::function<void(T)> callback)
         {
-            String topicStr = String(_mqttClientName) + String("/in/") + topic;
+            String topicStr = strictTopic ? topic : String(_mqttClientName) + String("/in/") + topic;
             _subscriptions[topicStr] = [callback, this](const String& value)
             {
                 T typedValue = this->_fromString<T>(value);
@@ -181,11 +195,11 @@ class MqttHandler
         }
 
         template <typename T>
-        void _publish(const String &topic, const T& value)
+        void _publish(const String &topic, bool strictTopic, const T& value)
         {
             String valueStr = _toString(value);
 
-            String pubTopic = String(_mqttClientName) + String("/out/") + topic;
+            String pubTopic = strictTopic ? topic : String(_mqttClientName) + String("/out/") + topic;
             if (_client.connected())
             {
                 _client.publish(pubTopic.c_str(), valueStr.c_str());
