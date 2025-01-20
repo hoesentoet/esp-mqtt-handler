@@ -29,11 +29,11 @@ template <typename T>
 class MqttSubVariable
 {
     public:
-        MqttSubVariable(T value, String topic, bool strictTopic = false, std::function<void(MqttSubVariable&)> onChangeCb = nullptr)
-            : _value(value), _topic(topic), _strictTopic(strictTopic), _onChange(onChangeCb) {}
+        MqttSubVariable(T value, String topic, bool strictTopic = false)
+            : _value(value), _topic(topic), _strictTopic(strictTopic), _onChange(nullptr) {}
         
-        MqttSubVariable(T value, const char *topic, bool strictTopic = false, std::function<void(MqttSubVariable&)> onChangeCb = nullptr)
-            : _value(value), _topic(String(topic)), _strictTopic(strictTopic), _onChange(onChangeCb) {}
+        MqttSubVariable(T value, const char *topic, bool strictTopic = false)
+            : _value(value), _topic(String(topic)), _strictTopic(strictTopic), _onChange(nullptr) {}
 
         T getValue(void)
         {
@@ -78,11 +78,11 @@ template <typename T>
 class MqttPubVariable
 {
     public:
-        MqttPubVariable(T value, String topic, bool strictTopic = false, ulong minPubIntervalMs = 0)
-            : _value(value), _topic(topic), _strictTopic(strictTopic), _minPubIntervalMs(minPubIntervalMs)  {}
+        MqttPubVariable(T value, String topic, ulong minPubIntervalMs = 0)
+            : _value(value), _topic(topic), _minPubIntervalMs(minPubIntervalMs)  {}
         
-        MqttPubVariable(T value, const char *topic, bool strictTopic = false, ulong minPubIntervalMs = 0)
-            : _value(value), _topic(String(topic)), _strictTopic(strictTopic), _minPubIntervalMs(minPubIntervalMs)  {}
+        MqttPubVariable(T value, const char *topic, ulong minPubIntervalMs = 0)
+            : _value(value), _topic(String(topic)), _minPubIntervalMs(minPubIntervalMs)  {}
 
         void setValue(T value)
         {
