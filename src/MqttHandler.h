@@ -143,11 +143,12 @@ class MqttPubVariable
 class MqttHandler
 {
     public:
-        MqttHandler(IPAddress brokerIP, String username, String password, String clientName) {
+        MqttHandler(IPAddress brokerIP, String username, String password, String clientName, bool logging = false) {
             _mqttServer = brokerIP;
             _mqttUser = username;
             _mqttPassword = password;
             _mqttClientName = clientName;
+            _logging = logging;
         }
 
         template<typename T>
@@ -157,7 +158,9 @@ class MqttHandler
             bool strictTopic = variable.isTopicStrict();
             this->_subscribe<T>(topic, strictTopic, [&variable, this, topic](T newValue) {
                 variable._setValue(newValue);
-                Serial.println(String("Updated variable '") + variable.getTopic() + String("' to ") + String(variable.getValue()));
+                if (this->_logging) {
+                    Serial.println(String("Updated variable '") + variable.getTopic() + String("' to ") + String(variable.getValue()));
+                }
             });
         }
 
@@ -174,6 +177,7 @@ class MqttHandler
 
     private:
         String _mqttUser, _mqttPassword, _mqttClientName;
+        bool _logging;
 
         IPAddress _mqttServer;
         WiFiClient _wifiClient;
