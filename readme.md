@@ -7,14 +7,14 @@ Add one of the following lines to your `platformio.ini`
 lib_deps =
   # RECOMMENDED
   # Accept new functionality in a backwards compatible manner and patches
-  https://github.com/hoesentoet/esp-mqtt-handler.git @ ^1.0.4
+  https://github.com/hoesentoet/esp-mqtt-handler.git @ ^1.0.5
 
   # Accept only backwards compatible bug fixes
   # (any version with the same major and minor versions, and an equal or greater patch version)
-  https://github.com/hoesentoet/esp-mqtt-handler.git @ ~1.0.4
+  https://github.com/hoesentoet/esp-mqtt-handler.git @ ~1.0.5
 
   # The exact version
-  https://github.com/hoesentoet/esp-mqtt-handler.git @ 1.0.4
+  https://github.com/hoesentoet/esp-mqtt-handler.git @ 1.0.5
 ```
 
 ## Maintaining this library

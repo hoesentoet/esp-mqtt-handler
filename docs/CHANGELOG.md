@@ -1,5 +1,10 @@
 # ChangeLog for MqttHandler
 
+## 1.0.5 - (2025-01-20)
+
+### Features
+- Add topic strictness to pub and sub variable to be able to use the raw topic string specified instead of automatically adding the client name and in/out paths.
+
 ## 1.0.4 - (2025-01-19)
 
 ### Bugfixes:
