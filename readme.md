@@ -1,4 +1,5 @@
 # ESP-MQTT-Handler
+MQTT wrapper library that adds MQTT variables for a very easy and clean use of the PubSubClient library.
 
 ## Usage
 Add one of the following lines to your `platformio.ini`
