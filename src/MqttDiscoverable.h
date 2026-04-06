@@ -11,6 +11,8 @@
 
 #include <Arduino.h>
 
+#include "HomeAssistantUnits.h"
+
 /**
  * @brief HA component types supported by MQTT discovery.
  *        Extend as needed — full list at https://www.home-assistant.io/integrations/mqtt/
@@ -41,12 +43,12 @@ struct MqttDiscoverable
 
     // ── Common optional fields ─────────────────────────────────────────────
 
-    String name = "";           ///< Friendly name shown in HA UI
-    String deviceClass = "";    ///< e.g. "temperature", "humidity", "motion"
-    String stateClass = "";     ///< "measurement" | "total" | "total_increasing"
-    String unitOfMeas = "";     ///< e.g. "°C", "%", "W"
-    String icon = "";           ///< e.g. "mdi:thermometer"
-    String entityCategory = ""; ///< "config" | "diagnostic" | ""
+    String name = "";                 ///< Friendly name shown in HA UI
+    String deviceClass = "";          ///< e.g. "temperature", "humidity", "motion"
+    String stateClass = "";           ///< "measurement" | "total" | "total_increasing"
+    HaUnit unitOfMeas = HaUnit::NONE; ///< e.g. "°C", "%", "W"
+    String icon = "";                 ///< e.g. "mdi:thermometer"
+    String entityCategory = "";       ///< "config" | "diagnostic" | ""
 
     // ── Switch / Number / Select specific ─────────────────────────────────
 

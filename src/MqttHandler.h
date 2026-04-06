@@ -8,6 +8,7 @@
 #include <ArduinoJson.h>
 
 #include "MqttDiscoverable.h"
+#include "HomeAssistantUnits.h"
 
 #ifdef ESP32
 #include <WiFi.h>

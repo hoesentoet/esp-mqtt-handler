@@ -186,8 +186,8 @@ void MqttHandler::_publishDiscoveryConfig(const String &stateTopic,
         doc["device_class"] = meta.deviceClass;
     if (!meta.stateClass.isEmpty())
         doc["state_class"] = meta.stateClass;
-    if (!meta.unitOfMeas.isEmpty())
-        doc["unit_of_measurement"] = meta.unitOfMeas;
+    if (meta.unitOfMeas != HaUnit::NONE)
+        doc["unit_of_measurement"] = haUnitToString(meta.unitOfMeas);
     if (!meta.icon.isEmpty())
         doc["icon"] = meta.icon;
     if (!meta.entityCategory.isEmpty())
