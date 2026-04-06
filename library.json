@@ -17,7 +17,8 @@
   "license": "MIT",
   "exclude": "src/main.cpp",
   "dependencies": {
-    "knolleary/PubSubClient": "~2.8"
+    "knolleary/PubSubClient": "~2.8",
+    "bblanchon/ArduinoJson": "^7.4.3"
   },
   "frameworks": [
     "arduino"
