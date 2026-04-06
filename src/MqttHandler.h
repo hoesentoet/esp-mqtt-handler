@@ -279,7 +279,7 @@ private:
         String pubTopic = strictTopic ? topic : String(_mqttClientName) + String("/out/") + topic;
         if (_client.connected())
         {
-            _client.publish(pubTopic.c_str(), valueStr.c_str());
+            _client.publish(pubTopic.c_str(), valueStr.c_str(), /*retained=*/true);
         }
         _toPublish[pubTopic] = valueStr;
     }
