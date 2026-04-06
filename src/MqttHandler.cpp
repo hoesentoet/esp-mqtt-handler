@@ -61,6 +61,7 @@ void MqttHandler::_connect()
             for (const auto &pair : _toPublish)
             {
                 _client.publish(pair.first.c_str(), pair.second.c_str());
+                _toPublish.clear();
             }
         }
         else

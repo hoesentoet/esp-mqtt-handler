@@ -177,6 +177,7 @@ public:
     {
         variable._onChange([this](MqttPubVariable<T> &var)
                            { this->_publish(var.getTopic(), var.isTopicStrict(), var.getValue()); });
+        _publish(variable.getTopic(), variable.isTopicStrict(), variable.getValue());
     }
 
     /**
@@ -280,6 +281,7 @@ private:
         if (_client.connected())
         {
             _client.publish(pubTopic.c_str(), valueStr.c_str(), /*retained=*/true);
+            return;
         }
         _toPublish[pubTopic] = valueStr;
     }
