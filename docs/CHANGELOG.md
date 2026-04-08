@@ -1,5 +1,11 @@
 # ChangeLog for MqttHandler
 
+## 1.1.0 - (2026-04-06)
+
+### Features
+- Add Home Assistant auto discovery functionality
+- Fix memory leak with `_toPublish` map
+
 ## 1.0.7 - (2025-01-20)
 
 ### Features
