@@ -1,4 +1,5 @@
 .pio
 .vscode
+boards/
 main.cpp
 platformio.ini
