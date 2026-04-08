@@ -101,12 +101,6 @@ void MqttHandler::setDeviceInfo(const String& deviceId, const String& deviceName
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-String MqttHandler::_resolveTopic(const String& topic, bool strictTopic) const {
-    return strictTopic ? topic : (_mqttClientName + "/out/" + topic);
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-
 const char* MqttHandler::_componentStr(HaComponent c) {
     switch (c) {
         case HaComponent::SENSOR:

@@ -160,7 +160,7 @@ class MqttHandler {
     void addDiscoverable(MqttSubVariable<T>& subVar, const MqttDiscoverable& meta) {
         // For a pure subscriber the "state" visible in HA is what the ESP receives,
         // so we expose the sub-topic as state_topic (HA reads back what it sent).
-        String topic = _resolveTopic(subVar.getTopic(), subVar.isTopicStrict());
+        String topic = _resolveTopic(subVar);
 
         _discoverables.push_back(
             [this, topic, meta]() { _publishDiscoveryConfig(topic, /*cmdTopic=*/"", meta); });
@@ -174,9 +174,7 @@ class MqttHandler {
     template <typename T>
     void addDiscoverable(MqttPubVariable<T>& variable, const MqttDiscoverable& meta) {
         // Resolve the actual topic the same way _publish() does
-        String stateTopic = meta.component == HaComponent::SWITCH
-                                ? _resolveTopic(variable.getTopic(), variable.isTopicStrict())
-                                : _resolveTopic(variable.getTopic(), variable.isTopicStrict());
+        String stateTopic = _resolveTopic(variable);
 
         _discoverables.push_back([this, stateTopic, meta]() {
             _publishDiscoveryConfig(stateTopic, /*cmdTopic=*/"", meta);
@@ -195,8 +193,8 @@ class MqttHandler {
     template <typename TPub, typename TSub>
     void addDiscoverable(MqttPubVariable<TPub>& pubVar, MqttSubVariable<TSub>& subVar,
                          const MqttDiscoverable& meta) {
-        String stateTopic = _resolveTopic(pubVar.getTopic(), pubVar.isTopicStrict());
-        String cmdTopic = _resolveTopic(subVar.getTopic(), subVar.isTopicStrict());
+        String stateTopic = _resolveTopic(pubVar);
+        String cmdTopic = _resolveTopic(subVar);
 
         _discoverables.push_back([this, stateTopic, cmdTopic, meta]() {
             _publishDiscoveryConfig(stateTopic, cmdTopic, meta);
@@ -249,7 +247,18 @@ class MqttHandler {
     std::vector<std::function<void()>> _discoverables;  ///< Lambdas, each publishes one config
 
     /** @brief Resolve a topic to its full MQTT path (prefix + in/out or strict). */
-    String _resolveTopic(const String& topic, bool strictTopic) const;
+    template <typename TPub>
+    String _resolveTopic(MqttPubVariable<TPub>& pubVar) const {
+        return pubVar.isTopicStrict() ? pubVar.getTopic()
+                                      : (_mqttClientName + "/out/" + pubVar.getTopic());
+    }
+
+    /** @brief Resolve a topic to its full MQTT path (prefix + in/out or strict). */
+    template <typename TSub>
+    String _resolveTopic(MqttSubVariable<TSub>& subVar) const {
+        return subVar.isTopicStrict() ? subVar.getTopic()
+                                      : (_mqttClientName + "/in/" + subVar.getTopic());
+    }
 
     /** @brief Build and publish a single HA discovery config message. */
     void _publishDiscoveryConfig(const String& stateTopic, const String& cmdTopic,
